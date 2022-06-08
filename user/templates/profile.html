@@ -1,0 +1,136 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+{% block 'extraCss' %}
+<link rel="stylesheet" type="text/css" href="{% static 'css/profile.css' %}">
+{% endblock %}
+{% block 'content %}
+<div id="profile" class="container content">
+    <form v-on:submit.prevent="updateUser()" enctype="multipart/form-data">
+        <div class="row">
+            <div class="col-md-4">
+                <div class="profile-img">
+                    <img :src="user.avatar_url" alt="Avatar" id="avatar_url"/>
+                    <div v-if="editMode" class="file btn btn-lg btn-primary">
+                        Change Photo
+                        <input  v-on:change="readURL"
+                                type="file"
+                                class="form-control"
+                                id="avatar"
+                                accept="image/jpeg, image/png"
+                                ref="avatar">
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="profile-head">
+                    <h5 v-if="!editMode" v-html="user.name"></h5>
+                    <input v-if="editMode"
+                            type="text"
+                            class="form-control"
+                            id="user_name"
+                            placeholder="{{user.name}}"
+                            v-model="userForm.name"
+                            required>
+                    <h6 v-html="user.username"></h6>
+                </div>
+            </div>
+            <div class="col-md-2">
+                <button v-if="!editMode" type="button" v-on:click="editMode = true" class="profile-edit-btn">Edit Profile</button>
+                <button v-if="editMode" type="button" v-on:click="editMode = false" class="profile-cancel-btn mt-1">Cancel</button>
+                <button v-if="editMode" type="submit" class="profile-save-btn mt-1">Save</button>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="offset-md-4 col-md-8">
+                <div class="tab-content profile-tab" id="myTabContent">
+                    <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <label>First name</label>
+                            </div>
+                            <div class="col-md-6">
+                                <p v-if="!editMode" v-html="user.first_name"></p>
+                                <input v-if="editMode"
+                                        type="text"
+                                        class="form-control"
+                                        id="first_name"
+                                        placeholder="{{user.first_name}}"
+                                        v-model="userForm.first_name"
+                                       required>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <label>Last name</label>
+                            </div>
+                            <div class="col-md-6">
+                                <p v-if="!editMode" v-html="user.last_name"></p>
+                                <input v-if="editMode"
+                                        type="text"
+                                        class="form-control"
+                                        id="last_name"
+                                        placeholder="{{user.last_name}}"
+                                        v-model="userForm.last_name"
+                                        required>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <label>Email</label>
+                            </div>
+                            <div class="col-md-6">
+                                <p v-if="!editMode" v-html="user.email"></p>
+                                <input v-if="editMode"
+                                        type="email"
+                                        class="form-control"
+                                        id="email"
+                                        placeholder="{{user.email}}"
+                                        v-model="userForm.email"
+                                        required>
+                            </div>
+                        </div>
+                        <div class="row" v-if="editMode">
+                            <div class="col-md-6">
+                                <label>Password</label>
+                            </div>
+                            <div class="col-md-6">
+                                <input  type="password"
+                                        class="form-control"
+                                        id="password"
+                                        v-model="userForm.password">
+                            </div>
+                        </div>
+                        <div class="row" v-if="editMode">
+                            <div class="col-md-6">
+                                <label>Confirm password</label>
+                            </div>
+                            <div class="col-md-6">
+                                <input  type="password"
+                                        class="form-control"
+                                        id="password2"
+                                        v-model="userForm.password2">
+                            </div>
+                        </div>
+                    </div>
+                    <span id="error-message" style="color:red" >${message}</span>
+                </div>
+            </div>
+        </div>
+    </form>
+    <div class="row">
+        <div class="offset-8 col-4">
+            <button type="button" v-on:click="logout" class="profile-cancel-btn mt-1">Logout</button>
+        </div>
+    </div>
+    <div class="loading" v-if="loading===true">Loading&#8230;</div>
+</div>
+
+{% endblock %}
+
+{% block 'extraJs %}
+<script src="{% static 'js/user.js' %}"></script>
+<script>
+    Vue.http.headers.common['X-CSRFToken'] = "{{ csrf_token }}";
+</script>
+{% endblock %}
