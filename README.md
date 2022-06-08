@@ -24,6 +24,7 @@ URLS
 ----
 
 /login: page of login. Before login you have to create user in /admin
+
 / or /profile: page of profile data. Here you can modify avatar, the rest of fields and logout 
 
 ***
