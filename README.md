@@ -10,6 +10,7 @@ $ sudo docker-compose run web
 Open another terminal
 $ docker exec -t -i $(sudo docker ps -aqf "name=personalmanagementsystem_web") bash
 $ python manage.py createsuperuser
+Close terminal 
 Back to terminal with docker
 $ CONTROL-C 
 $ sudo docker-compose up
